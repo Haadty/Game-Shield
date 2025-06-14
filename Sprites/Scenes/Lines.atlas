@@ -1,0 +1,4 @@
+images {
+  image: "/Sprites/Scenes/Lines.png"
+}
+extrude_borders: 2

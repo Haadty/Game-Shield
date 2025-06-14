@@ -1,0 +1,103 @@
+-- enum de ações
+Player_actions = {
+	idle = "idle",
+	parry = "parry",
+	block = "block",
+	absorb = "absorb",
+	recharge = "recharge"
+}
+
+Player_actual_action = Player_actions.idle -- ação atual
+Player_action_duration = 0.5  -- duração da ação
+Player_action_recharge = 1.5  -- tempo até voltar ao idle
+
+Player_action_held = false      -- se o botão está sendo segurado
+
+local _player_action_hold = false      -- se a ação foi iniciada segurando o botão
+
+
+function init(self)
+	self.action_timer = 0
+	msg.post(".", "acquire_input_focus")
+	print("Init completa")
+end
+
+function update(self, dt)
+
+	if Player_actual_action ~= Player_actions.idle then
+		if not _player_action_hold then
+			self.action_timer = self.action_timer + dt
+
+			-- passou o tempo de duração -> entra em recharge
+			if Player_actual_action ~= Player_actions.recharge and self.action_timer >= Player_action_duration then
+				Player_actual_action = Player_actions.recharge
+				print("Entrou em RECHARGE")
+			end
+
+			-- passou o tempo total -> volta ao idle
+			if self.action_timer >= (Player_action_duration + Player_action_recharge) then
+				Player_actual_action = Player_actions.idle
+				self.action_timer = 0
+				print("Ação finalizada, voltou para IDLE")
+			end
+		end
+	end
+end
+
+function on_input(self, action_id, action)
+
+	-- só pode iniciar nova ação se estiver em idle
+	if Player_actual_action == Player_actions.idle then
+		local started = false
+
+		if action_id == hash("block") and action.pressed then
+			Player_actual_action = Player_actions.block
+			print("Iniciou ação: BLOCK")
+			started = true
+		elseif action_id == hash("parry") and action.pressed then
+			Player_actual_action = Player_actions.parry
+			print("Iniciou ação: PARRY")
+			started = true
+		elseif action_id == hash("absorb") and action.pressed then
+			Player_actual_action = Player_actions.absorb
+			print("Iniciou ação: ABSORB")
+			started = true
+		end
+
+		if started then
+			self.action_timer = 0
+			Player_action_held = action.repeated or action.pressed
+			_player_action_hold = action.repeated or action.pressed
+			if _player_action_hold then
+				print("Modo SEGURANDO ativado")
+			end
+		end
+	end
+
+	-- soltou botão de ação
+	if Player_actual_action ~= Player_actions.idle then
+		if (action_id == hash("block") or action_id == hash("parry") or action_id == hash("absorb")) and action.released then
+			Player_action_held = false
+			if _player_action_hold then
+				_player_action_hold = false
+				self.action_timer = 0
+				print("Soltou botão — iniciando duração e recharge")
+			end
+		end
+	end
+end
+
+function Reset_action(self)
+	Player_actual_action = Player_actions.idle
+	self.action_timer = 0
+	Player_action_held = false
+	_player_action_hold = false
+	print("RESET MANUAL — voltou para IDLE")
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("reset_action") then
+		Reset_action(self)
+	end
+end
+

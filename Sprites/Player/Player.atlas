@@ -1,0 +1,4 @@
+images {
+  image: "/Sprites/Player/player_col.png"
+}
+extrude_borders: 2

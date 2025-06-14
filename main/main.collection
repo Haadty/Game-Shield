@@ -1,0 +1,57 @@
+name: "main"
+instances {
+  id: "Player"
+  prototype: "/objects/Player.go"
+  position {
+    y: -135.0
+    z: -1.0
+  }
+  component_properties {
+    id: "Player_Movement"
+    properties {
+      id: "line0"
+      value: "250.0, -135.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "line1"
+      value: "125.0, -135.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "line2"
+      value: "0.0, -135.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "line3"
+      value: "-125.0, -135.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "line4"
+      value: "-250.0, -135.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+  }
+  scale3 {
+    x: 2.0
+    y: 2.0
+    z: 2.0
+  }
+}
+instances {
+  id: "Background"
+  prototype: "/objects/Background.go"
+}
+instances {
+  id: "Line_Decoration"
+  prototype: "/Sprites/Scenes/Line_Decoration.go"
+  position {
+    z: -2.0
+  }
+  scale3 {
+    y: 0.395303
+  }
+}
+scale_along_z: 0

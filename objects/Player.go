@@ -1,0 +1,56 @@
+components {
+  id: "Player"
+  component: "/Sprites/Player/Player.sprite"
+}
+components {
+  id: "Player_Actions"
+  component: "/Scripts/Player_Actions.script"
+}
+components {
+  id: "Player_Movement"
+  component: "/Scripts/Player_Movement.script"
+}
+components {
+  id: "Player_Actions1"
+  component: "/Scripts/Player_Actions.script"
+}
+embedded_components {
+  id: "collisionobject"
+  type: "collisionobject"
+  data: "type: COLLISION_OBJECT_TYPE_DYNAMIC\n"
+  "mass: 1.0\n"
+  "friction: 0.1\n"
+  "restitution: 0.5\n"
+  "group: \"default\"\n"
+  "mask: \"default\"\n"
+  "embedded_collision_shape {\n"
+  "  shapes {\n"
+  "    shape_type: TYPE_BOX\n"
+  "    position {\n"
+  "      y: 24.0\n"
+  "    }\n"
+  "    rotation {\n"
+  "    }\n"
+  "    index: 0\n"
+  "    count: 3\n"
+  "    id: \"action\"\n"
+  "  }\n"
+  "  shapes {\n"
+  "    shape_type: TYPE_BOX\n"
+  "    position {\n"
+  "    }\n"
+  "    rotation {\n"
+  "    }\n"
+  "    index: 3\n"
+  "    count: 3\n"
+  "    id: \"player_healt\"\n"
+  "  }\n"
+  "  data: 20.075008\n"
+  "  data: 4.0066466\n"
+  "  data: 10.0\n"
+  "  data: 14.273628\n"
+  "  data: 19.982607\n"
+  "  data: 10.0\n"
+  "}\n"
+  ""
+}

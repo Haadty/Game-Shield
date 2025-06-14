@@ -1,0 +1,74 @@
+
+-- Atributos principais
+Player = {
+    life_max = 100,
+    life = 100,
+    gold = 0,
+    points = 0,
+    damage = 10,
+    defense = 0,
+    velocity = 0,
+    absorv_modifier = 0,
+    upgrades = {}
+}
+
+local function clamp_life()
+    if Player.life > Player.life_max then
+        Player.life = Player.life_max
+    elseif Player.life < 0 then
+        Player.life = 0
+    end
+end
+
+function Player:add_life(amount)
+    self.life = self.life + amount
+    clamp_life()
+    print("Vida atual: " .. self.life .. "/" .. self.life_max)
+end
+
+function Player:remove_life(amount)
+    self.life = self.life - amount
+    clamp_life()
+    print("Vida atual: " .. self.life .. "/" .. self.life_max)
+end
+
+function Player:take_damage(amount)
+    local final_damage = amount - self.defense
+    if final_damage < 1 then final_damage = 1 end
+    self.life = self.life - final_damage
+    clamp_life()
+    print("Recebeu dano: " .. final_damage .. " | Vida atual: " .. self.life)
+end
+
+function Player:reset_life()
+    self.life = self.life_max
+    print("Vida resetada para o máximo: " .. self.life_max)
+end
+
+function Player:add_gold(amount)
+    self.gold = self.gold + amount
+    print("Ouro atual: " .. self.gold)
+end
+
+function Player:add_points(amount)
+    self.points = self.points + amount
+    print("Pontos: " .. self.points)
+end
+
+function Player:add_upgrade(name)
+    self.upgrades[name] = true
+    print("Upgrade adicionado: " .. name)
+end
+
+function Player:reset_upgrades()
+    self.upgrades = {}
+    print("Todos os upgrades foram resetados")
+end
+
+function Player:reset_stats()
+    self.damage = 0
+    self.defense = 0
+    self.velocity = 0
+    self.absorv_modifier = 0
+    print("Atributos resetados (dano, defesa, velocidade, absorção)")
+end
