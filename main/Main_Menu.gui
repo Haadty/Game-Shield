@@ -1,0 +1,104 @@
+fonts {
+  name: "Pixle_Font"
+  font: "/main/fonts/Pixle_Font.font"
+}
+textures {
+  name: "GraficsAssets"
+  texture: "/main/GraficsAssets.atlas"
+}
+nodes {
+  position {
+    x: 320.0
+    y: 210.0
+  }
+  scale {
+    x: 0.565124
+    y: 0.582287
+    z: 1.044576
+  }
+  type: TYPE_BOX
+  texture: "GraficsAssets/background"
+  id: "SplashBackground"
+  layer: "Mensaages"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 311.0
+    y: 336.0
+  }
+  type: TYPE_BOX
+  texture: "GraficsAssets/logo"
+  id: "logo"
+  layer: "Mensaages"
+  inherit_alpha: true
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 319.0
+    y: 33.0
+  }
+  scale {
+    x: 0.175244
+    y: 0.149943
+    z: 0.84
+  }
+  type: TYPE_BOX
+  texture: "GraficsAssets/HUD_W"
+  id: "Hud_W"
+  layer: "Mensaages"
+  inherit_alpha: true
+  alpha: 0.0
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    y: 197.0
+  }
+  scale {
+    x: 0.208356
+    y: 0.210908
+    z: 0.58
+  }
+  type: TYPE_BOX
+  texture: "GraficsAssets/HUD_H"
+  id: "Hud_H"
+  layer: "Mensaages"
+  inherit_alpha: true
+  alpha: 0.0
+  size_mode: SIZE_MODE_AUTO
+}
+nodes {
+  position {
+    x: 309.0
+    y: 184.0
+  }
+  size {
+    x: 200.0
+    y: 100.0
+  }
+  color {
+    x: 0.302
+    y: 0.0
+    z: 0.102
+  }
+  type: TYPE_TEXT
+  text: "Game Shield"
+  font: "Pixle_Font"
+  id: "gameshild"
+  layer: "Mensaages"
+  inherit_alpha: true
+}
+layers {
+  name: "Background"
+}
+layers {
+  name: "Button"
+}
+layers {
+  name: "Mensaages"
+}
+material: "/builtins/materials/gui.material"
+adjust_reference: ADJUST_REFERENCE_PARENT

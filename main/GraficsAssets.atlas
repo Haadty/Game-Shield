@@ -1,0 +1,25 @@
+images {
+  image: "/assets/images/background.png"
+}
+images {
+  image: "/assets/images/bau 1.png"
+}
+images {
+  image: "/assets/images/gato_sheet.png"
+}
+images {
+  image: "/assets/images/HUD_H.png"
+}
+images {
+  image: "/assets/images/HUD_W.png"
+}
+images {
+  image: "/assets/images/live.png"
+}
+images {
+  image: "/assets/images/logo.png"
+}
+images {
+  image: "/assets/images/Us Dollar Circled.png"
+}
+extrude_borders: 2

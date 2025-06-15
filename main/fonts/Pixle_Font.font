@@ -1,0 +1,4 @@
+font: "/main/fonts/Pixle_Font.ttf"
+material: "/builtins/fonts/font.material"
+size: 68
+characters: " !\"#$%&\'()*+,-./0123456789:;<=>?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`abcdefghijklmnopqrstuvwxyz{|}~"
