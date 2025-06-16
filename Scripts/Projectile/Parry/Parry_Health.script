@@ -1,0 +1,33 @@
+local Projectile = require "Scripts.Projectile.Projectile_Module"
+local Player = require "Scripts.Player_Status"
+local proj = nil
+
+function init(self)
+    local id = go.get_id()
+    proj = Projectile:new(id, Player.Attack_types.parry, 5, 100)
+end
+
+function update(self, dt)
+    if proj and proj.alive then
+        proj:update(dt)
+    end
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("trigger_response") then
+        if proj and proj.alive then
+            if message.group == hash("life") and not Player.invincibility_active then
+                proj:destroy()
+                Player.RemoveLife(proj.damage)
+
+            elseif message.group == hash("shield") then
+                if Player.CheckType(proj.type, Player.Player_actual_action) then
+                    Player.AddLife(5)
+                    proj:destroy()
+                end
+            end
+            
+            proj:on_trigger(message)
+        end
+    end
+end

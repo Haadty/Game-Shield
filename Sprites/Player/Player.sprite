@@ -1,6 +1,10 @@
-default_animation: "player_col"
+default_animation: "idle"
 material: "/builtins/materials/sprite.material"
+size {
+  x: 64.0
+  y: 64.0
+}
 textures {
   sampler: "texture_sampler"
-  texture: "/Sprites/Player/Player.atlas"
+  texture: "/Sprites/Player/player.tilesource"
 }

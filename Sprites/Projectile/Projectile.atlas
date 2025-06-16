@@ -1,0 +1,19 @@
+images {
+  image: "/Sprites/Projectile/Absorb.png"
+}
+images {
+  image: "/Sprites/Projectile/Block.png"
+}
+images {
+  image: "/Sprites/Projectile/Double.png"
+}
+images {
+  image: "/Sprites/Projectile/Normal.png"
+}
+images {
+  image: "/Sprites/Projectile/Parry.png"
+}
+images {
+  image: "/Sprites/Projectile/Three.png"
+}
+extrude_borders: 2

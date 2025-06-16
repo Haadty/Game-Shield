@@ -1,0 +1,46 @@
+local Player = require "Scripts.Player_Status"
+
+go.property("speed", 60)                
+go.property("reset_offset", 640)        
+go.property("direction", -1)            
+go.property("acceleration_time", 2.0)    
+go.property("max_factor", 3.0)          
+
+function init(self)
+    self.start_pos = go.get_position()
+    self.current_factor = 1.0              
+    self.target_factor = 1.0
+    self.timer = 0
+end
+
+function update(self, dt)
+    if not Player.Intro then
+        if Player.Battle_Start then
+            self.target_factor = self.max_factor
+        else
+            self.target_factor = 1.0
+        end
+
+        if math.abs(self.current_factor - self.target_factor) > 0.01 then
+            local direction = self.target_factor > self.current_factor and 1 or -1
+            local step = dt / self.acceleration_time * (self.max_factor - 1.0)
+            self.current_factor = self.current_factor + direction * step
+
+            if (direction == 1 and self.current_factor > self.target_factor) or (direction == -1 and self.current_factor < self.target_factor) then
+                self.current_factor = self.target_factor
+            end
+        end
+
+        -- Aplica o movimento
+        local pos = go.get_position()
+        local movement = self.speed * self.direction * self.current_factor * dt
+        pos.x = pos.x + movement
+
+        -- Reinicia se passou o limite
+        if math.abs(pos.x - self.start_pos.x) >= self.reset_offset then
+            pos.x = self.start_pos.x
+        end
+
+        go.set_position(pos)
+    end
+end

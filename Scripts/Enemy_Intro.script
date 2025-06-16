@@ -1,0 +1,127 @@
+local Player = require "Scripts.Player_Status"
+
+go.property("target_pos", vmath.vector3(0, 0, 0))
+go.property("final_target_pos", vmath.vector3(0, 0, 0))
+go.property("rotation_speed", 720)
+go.property("rotation_time", 1.5)
+go.property("adjust_rotation_time", 0.8)
+
+go.property("squash_duration", 0.6)
+go.property("squash_scale_x", 0.8)
+go.property("squash_scale_y", 1.5)
+
+go.property("idle_time", 2.0)
+go.property("float_amplitude", 4)
+go.property("float_duration", 1.2) 
+
+local state = "moving"
+local spin_timer = 0
+local spin_duration = 0
+
+local function start_floating(self)
+	local pos = go.get_position()
+	go.animate(".", "position.y", go.PLAYBACK_LOOP_PINGPONG, pos.y + self.float_amplitude, go.EASING_INOUTSINE, self.float_duration)
+end
+
+local function play_squash(self, on_complete)
+	go.animate(".", "scale.x", go.PLAYBACK_LOOP_PINGPONG, self.squash_scale_x, go.EASING_INOUTSINE, self.squash_duration / 2)
+	timer.delay(self.squash_duration / 2, false, function()
+		go.animate(".", "scale.y", go.PLAYBACK_LOOP_PINGPONG, self.squash_scale_y, go.EASING_INOUTSINE, self.squash_duration / 2)
+	end)
+
+	timer.delay(self.squash_duration, false, function()
+		go.cancel_animations(".", "scale.x")
+		go.cancel_animations(".", "scale.y")
+
+		go.animate(".", "scale.x", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_OUTSINE, 0.3)
+		go.animate(".", "scale.y", go.PLAYBACK_ONCE_FORWARD, 1, go.EASING_OUTSINE, 0.3)
+
+		timer.delay(0.3, false, function()
+			if on_complete then on_complete() end
+		end)
+	end)
+end
+
+function init(self)
+	self.speed = 300
+	self.rotation = 0
+	start_floating(self)
+end
+
+function update(self, dt)
+	if not Player.Intro then return end
+
+	local pos = go.get_position()
+
+	if state == "moving" then
+		local dir = self.target_pos - pos
+		local dist = vmath.length(dir)
+
+		self.rotation = (self.rotation + self.rotation_speed * dt) % 360
+		go.set_rotation(vmath.quat_rotation_z(math.rad(self.rotation)))
+
+		if dist < 1 then
+			go.set_position(self.target_pos)
+			state = "spinning"
+			spin_timer = self.rotation_time
+			spin_duration = self.rotation_time
+		else
+			local move = vmath.normalize(dir) * self.speed * dt
+			go.set_position(pos + move)
+		end
+
+	elseif state == "spinning" then
+		local t = spin_timer / spin_duration
+		local current_speed = self.rotation_speed * t
+		self.rotation = (self.rotation + current_speed * dt) % 360
+		go.set_rotation(vmath.quat_rotation_z(math.rad(self.rotation)))
+
+		spin_timer = spin_timer - dt
+		if spin_timer <= 0 then
+			state = "adjusting"
+			go.animate(".", "euler.z", go.PLAYBACK_ONCE_FORWARD, 0, go.EASING_OUTSINE, self.adjust_rotation_time)
+			timer.delay(self.adjust_rotation_time, false, function()
+				play_squash(self, function()
+					state = "entrance_anim"
+					msg.post("#sprite", "play_animation", { id = hash("entrance") })
+				end)
+			end)
+		end
+
+	elseif state == "moving_to_final" then
+		local dir = self.final_target_pos - pos
+		local dist = vmath.length(dir)
+
+		self.rotation = (self.rotation + self.rotation_speed * dt) % 360
+		go.set_rotation(vmath.quat_rotation_z(math.rad(self.rotation)))
+
+		if dist < 1 then
+			go.set_position(self.final_target_pos)
+			Player.Intro = false
+			state = "done"
+		else
+			local move = vmath.normalize(dir) * self.speed * dt
+			go.set_position(pos + move)
+		end
+	end
+end
+
+function on_message(self, message_id, message, sender)
+	if message_id == hash("animation_done") then
+		if state == "entrance_anim" and message.id == hash("entrance") then
+			play_squash(self, function()
+				msg.post("#sprite", "play_animation", { id = hash("idle") })
+				state = "idle"
+				timer.delay(self.idle_time, false, function()
+					msg.post("#sprite", "play_animation", { id = hash("back") })
+					state = "pre_exit"
+				end)
+			end)
+		elseif state == "pre_exit" and message.id == hash("back") then
+			msg.post("#sprite", "play_animation", { id = hash("static") })
+			timer.delay(0.6, false, function()
+				state = "moving_to_final"
+			end)
+		end
+	end
+end

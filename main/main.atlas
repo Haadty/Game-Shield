@@ -7,6 +7,19 @@ images {
 images {
   image: "/builtins/graphics/particle_blob.png"
 }
-margin: 0
+images {
+  image: "/Sprites/Scenes/parede.png"
+}
+images {
+  image: "/Sprites/Scenes/Layer 1.png"
+}
+images {
+  image: "/Sprites/Scenes/rodape.png"
+}
+images {
+  image: "/Sprites/Scenes/chao_entre.png"
+}
+images {
+  image: "/Sprites/Scenes/bg_char.png"
+}
 extrude_borders: 2
-inner_padding: 0

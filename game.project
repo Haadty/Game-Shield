@@ -12,7 +12,8 @@ use_accelerometer = 0
 [display]
 width = 640
 height = 400
-high_dpi = 0
+high_dpi = 1
+fullscreen = 0
 
 [script]
 shared_state = 1
@@ -36,4 +37,11 @@ scale_mode = stretch
 
 [resource]
 http_cache = 0
+
+[graphics]
+default_texture_min_filter = nearest
+default_texture_mag_filter = nearest
+
+[sprite]
+subpixels = 0
 

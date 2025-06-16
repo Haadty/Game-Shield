@@ -1,0 +1,48 @@
+go.property("target_y", 0)       -- Posição Y desejada
+go.property("move_speed", 100)   -- Velocidade em pixels por segundo
+
+local Player = require "Scripts.Player_Status"
+
+function init(self)
+    self.reached = false
+    self.target_pos = vmath.vector3(go.get_position().x, self.target_y, go.get_position().z)
+end
+
+function update(self, dt)
+    if not Player.Battle_Start or self.reached then
+        return
+    end
+
+    local current_pos = go.get_position()
+    local distance = self.target_pos.y - current_pos.y
+
+    -- Quando a distância é muito pequena, consideramos como "chegou"
+    if math.abs(distance) < 0.5 then
+        go.set_position(self.target_pos)
+        self.reached = true
+        return
+    end
+
+    -- Cálculo de passo proporcional (lerp)
+    local direction = distance > 0 and 1 or -1
+    local step = self.move_speed * dt * direction
+
+    -- Evita ultrapassar o alvo
+    if math.abs(step) > math.abs(distance) then
+        current_pos.y = self.target_pos.y
+        self.reached = true
+    else
+        current_pos.y = current_pos.y + step
+    end
+
+    go.set_position(current_pos)
+end
+
+function on_message(self, message_id, message, sender)
+    if message_id == hash("set_target_y") and message.y then
+        self.target_pos.y = message.y
+        self.reached = false
+    elseif message_id == hash("set_speed") and message.speed then
+        self.move_speed = message.speed
+    end
+end

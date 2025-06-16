@@ -1,0 +1,45 @@
+local Player = require "Scripts.Player_Status"
+
+go.property("fade_duration", 1.5)  -- Duração total do fade (em segundos)
+go.property("start_visible", false)  -- Começa visível ou invisível
+
+function init(self)
+    self.opacity = self.start_visible and 1.0 or 0.0
+    self.target_opacity = self.opacity
+    self.sprite_url = "#Lines"  -- Troque se o sprite tiver outro id
+
+    self.original_tint = go.get(self.sprite_url, "tint")
+    go.set(self.sprite_url, "tint", vmath.vector4(
+        self.original_tint.x,
+        self.original_tint.y,
+        self.original_tint.z,
+        self.opacity
+    ))
+end
+
+function update(self, dt)
+    -- Define o alvo baseado no estado da batalha
+    local expected_opacity = Player.Battle_Start and 1.0 or 0.0
+    if self.target_opacity ~= expected_opacity then
+        self.target_opacity = expected_opacity
+    end
+
+    -- Apenas anima se houver diferença significativa
+    if math.abs(self.opacity - self.target_opacity) > 0.01 then
+        -- Calcula velocidade com base no tempo total
+        local fade_speed = 1 / self.fade_duration
+        local direction = (self.target_opacity > self.opacity) and 1 or -1
+        self.opacity = self.opacity + direction * fade_speed * dt
+
+        -- Limita entre 0 e 1
+        self.opacity = math.max(0, math.min(1, self.opacity))
+
+        -- Aplica ao sprite mantendo a cor original
+        go.set(self.sprite_url, "tint", vmath.vector4(
+            self.original_tint.x,
+            self.original_tint.y,
+            self.original_tint.z,
+            self.opacity
+        ))
+    end
+end

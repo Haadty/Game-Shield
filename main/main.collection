@@ -3,34 +3,35 @@ instances {
   id: "Player"
   prototype: "/objects/Player.go"
   position {
-    y: -135.0
+    x: 260.0
+    y: -110.0
     z: -1.0
   }
   component_properties {
     id: "Player_Movement"
     properties {
       id: "line0"
-      value: "250.0, -135.0, -1.0"
+      value: "260.0, -110.0, -1.0"
       type: PROPERTY_TYPE_VECTOR3
     }
     properties {
       id: "line1"
-      value: "125.0, -135.0, -1.0"
+      value: "145.0, -110.0, -1.0"
       type: PROPERTY_TYPE_VECTOR3
     }
     properties {
       id: "line2"
-      value: "0.0, -135.0, -1.0"
+      value: "10.0, -110.0, -1.0"
       type: PROPERTY_TYPE_VECTOR3
     }
     properties {
       id: "line3"
-      value: "-125.0, -135.0, -1.0"
+      value: "-125.0, -110.0, -1.0"
       type: PROPERTY_TYPE_VECTOR3
     }
     properties {
       id: "line4"
-      value: "-250.0, -135.0, -1.0"
+      value: "-255.0, -110.0, -1.0"
       type: PROPERTY_TYPE_VECTOR3
     }
   }
@@ -46,12 +47,242 @@ instances {
 }
 instances {
   id: "Line_Decoration"
-  prototype: "/Sprites/Scenes/Line_Decoration.go"
+  prototype: "/objects/Line_Decoration.go"
   position {
+    z: -5.0
+  }
+}
+instances {
+  id: "baixo"
+  prototype: "/objects/baixo.go"
+  position {
+    x: -320.0
+    z: -7.0
+  }
+  component_properties {
+    id: "Parallax"
+    properties {
+      id: "speed"
+      value: "100.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "direction"
+      value: "1.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "acceleration_time"
+      value: "5.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+  component_properties {
+    id: "Decoration_Movement"
+    properties {
+      id: "target_y"
+      value: "-25.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+}
+instances {
+  id: "rodape"
+  prototype: "/objects/rodape.go"
+  position {
+    x: -320.0
+    z: -8.0
+  }
+  component_properties {
+    id: "Parallax"
+    properties {
+      id: "speed"
+      value: "300.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "direction"
+      value: "1.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "acceleration_time"
+      value: "4.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+  component_properties {
+    id: "Decoration_Movement"
+    properties {
+      id: "target_y"
+      value: "90.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "move_speed"
+      value: "200.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+}
+instances {
+  id: "chao"
+  prototype: "/objects/chao.go"
+  position {
+    x: 320.0
+    z: -10.0
+  }
+  component_properties {
+    id: "Parallax"
+    properties {
+      id: "speed"
+      value: "200.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "acceleration_time"
+      value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+}
+instances {
+  id: "parede"
+  prototype: "/objects/parede.go"
+  position {
+    x: 320.0
+    z: -9.0
+  }
+  component_properties {
+    id: "Parallax"
+    properties {
+      id: "speed"
+      value: "400.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "acceleration_time"
+      value: "5.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+  component_properties {
+    id: "Decoration_Movement"
+    properties {
+      id: "target_y"
+      value: "90.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "move_speed"
+      value: "200.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+}
+instances {
+  id: "Fundo_Line"
+  prototype: "/objects/Fundo_Line.go"
+  position {
+    z: -6.0
+  }
+  component_properties {
+    id: "Fade_Object"
+    properties {
+      id: "fade_duration"
+      value: "2.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+}
+instances {
+  id: "Double"
+  prototype: "/objects/Projectile/Double.go"
+  position {
+    x: 1302.0
+    y: 300.0
     z: -2.0
   }
+}
+instances {
+  id: "Three"
+  prototype: "/objects/Projectile/Three.go"
+  position {
+    x: 1612.0
+    y: 300.0
+    z: -2.0
+  }
+}
+instances {
+  id: "Block_Normal"
+  prototype: "/objects/Projectile/Block_Normal.go"
+  position {
+    x: 1492.0
+    y: 500.0
+    z: -2.0
+  }
+}
+instances {
+  id: "Enemy"
+  prototype: "/objects/Enemy.go"
+  position {
+    x: -557.0
+    y: 120.0
+    z: -1.0
+  }
+  component_properties {
+    id: "Enemy_Intro"
+    properties {
+      id: "target_pos"
+      value: "0.0, 120.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "final_target_pos"
+      value: "400.0, 120.0, -1.0"
+      type: PROPERTY_TYPE_VECTOR3
+    }
+    properties {
+      id: "rotation_speed"
+      value: "720.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "rotation_time"
+      value: "3.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "idle_time"
+      value: "0.3"
+      type: PROPERTY_TYPE_NUMBER
+    }
+    properties {
+      id: "float_amplitude"
+      value: "10.0"
+      type: PROPERTY_TYPE_NUMBER
+    }
+  }
+}
+instances {
+  id: "pillar"
+  prototype: "/objects/pillar.go"
+  position {
+    x: -129.0
+    z: 1.0
+  }
   scale3 {
-    y: 0.395303
+    y: 2.0
+  }
+}
+instances {
+  id: "pillar_l"
+  prototype: "/objects/pillar_l.go"
+  position {
+    x: -1572.0
+  }
+  scale3 {
+    y: 2.0
   }
 }
 scale_along_z: 0

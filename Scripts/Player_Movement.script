@@ -1,5 +1,4 @@
-Player_line = 3
-Player_move_delay = 0.15
+local Player = require "Scripts.Player_Status"
 
 go.property("line0", vmath.vector3(0, 0, 0))
 go.property("line1", vmath.vector3(0, 0, 0))
@@ -13,7 +12,7 @@ local _queued_direction = nil
 local _held_left = false
 local _held_right = false
 local _move_timer = 0
-local _move_cooldown = Player_move_delay
+local _move_cooldown = Player.Player_move_delay
 
 function init(self)
 	msg.post(".", "acquire_input_focus")
@@ -24,35 +23,38 @@ function init(self)
 		self.line3,
 		self.line4
 	}
-	go.set_position(_line_positions[Player_line + 1])
+	go.set_position(_line_positions[Player.Player_line + 1])
 end
 
 function update(self, dt)
 	if _is_moving then
-		_move_timer = 0
 		return
 	end
 
-	if _held_left and _held_right then return end
-
-	_move_timer = _move_timer - dt
+	_move_timer = math.max(_move_timer - dt, 0)
 
 	-- Movimento enfileirado
 	if _queued_direction and _move_timer <= 0 then
-		Try_move(_queued_direction)
-		_queued_direction = nil
-		_move_timer = _move_cooldown
+		if Try_move(_queued_direction) then
+			_queued_direction = nil
+			_move_timer = _move_cooldown
+		else
+			-- Se ainda não puder mover na direção enfileirada, cancela a fila
+			_queued_direction = nil
+		end
 		return
 	end
 
-	-- Movimento automático ao segurar
+	-- Movimento por segurar (opcional)
 	if _move_timer <= 0 then
 		if _held_left and not _held_right then
-			Try_move("left")
-			_move_timer = _move_cooldown
+			if Try_move("left") then
+				_move_timer = _move_cooldown
+			end
 		elseif _held_right and not _held_left then
-			Try_move("right")
-			_move_timer = _move_cooldown
+			if Try_move("right") then
+				_move_timer = _move_cooldown
+			end
 		end
 	end
 end
@@ -61,55 +63,85 @@ function on_input(self, action_id, action)
 	local is_left = action_id == hash("left")
 	local is_right = action_id == hash("right")
 
+	-- Atualiza helds
 	if is_left then
 		_held_left = action.pressed or (_held_left and not action.released)
-	elseif is_right then
+	end
+	if is_right then
 		_held_right = action.pressed or (_held_right and not action.released)
 	end
 
-	if _held_left and _held_right then return end
+	-- Ignora se apertou os dois juntos
+	if _held_left and _held_right then
+		_queued_direction = nil
+		return
+	end
 
+	-- Verifica se foi pressionado
 	if action.pressed then
-		local direction = is_left and "left" or (is_right and "right" or nil)
-		if direction then
-			if _is_moving then
-				_queued_direction = direction
-			else
-				Try_move(direction)
+		local direction = nil
+		if is_left then direction = "left"
+		elseif is_right then direction = "right" end
+
+		-- Zera direção anterior que estava bloqueada (corrige o bug!)
+		_queued_direction = nil
+
+		if not _is_moving then
+			if Try_move(direction) then
 				_move_timer = _move_cooldown
+			else
+				-- Só guarda se for direção válida (não está na borda)
+				if Can_move(direction) then
+					_queued_direction = direction
+				end
 			end
 		end
 	end
 end
 
+function Can_move(dir)
+	if dir == "left" then
+		return Player.Player_line < 4
+	elseif dir == "right" then
+		return Player.Player_line > 0
+	end
+	return false
+end
+
 function Try_move(dir)
-	-- BLOQUEIO DE MOVIMENTO CONFORME AÇÃO
-	if Player_actual_action ~= Player_actions.idle and Player_actual_action ~= Player_actions.recharge then
-		return
+	-- BLOQUEIA MOVIMENTO SE NÃO ESTIVER IDLE/RECHARGE
+	if Player.Player_actual_action ~= Player.Player_actions.idle and Player.Player_actual_action ~= Player.Player_actions.recharge then
+		return false
 	end
 
 	-- CANCELA RECHARGE SE MOVIMENTAR
-	if Player_actual_action == Player_actions.recharge then
+	if Player.Player_actual_action == Player.Player_actions.recharge then
 		msg.post("#Player_Actions", "reset_action")
 	end
 
-	local target_line = Player_line
-	if dir == "left" and Player_line < 4 then
-		target_line = Player_line + 1
-	elseif dir == "right" and Player_line > 0 then
-		target_line = Player_line - 1
-	else
-		return
+	-- VERIFICA LIMITES
+	if not Can_move(dir) then return false end
+
+	local target_line = Player.Player_line
+	if dir == "left" then
+		target_line = target_line + 1
+	elseif dir == "right" then
+		target_line = target_line - 1
 	end
 
+	_is_moving = true
 	local target_pos = _line_positions[target_line + 1]
 	local current_pos = go.get_position()
 	local final_pos = vmath.vector3(target_pos.x, target_pos.y, current_pos.z)
 
-	_is_moving = true
+	local dash_dir = (dir == "left") and "right" or "left" -- se vai para a esquerda, você está olhando pra direita
+	msg.post("#Player_Actions", "play_dash_animation", { direction = dash_dir })
 
-	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, final_pos, go.EASING_LINEAR, Player_move_delay, 0, function()
-		Player_line = target_line
+	go.animate(".", "position", go.PLAYBACK_ONCE_FORWARD, final_pos, go.EASING_INOUTSINE, Player.Player_move_delay, 0, function()
+		Player.Player_line = target_line
+		msg.post("#Player_Actions", "reset_to_idle")
 		_is_moving = false
 	end)
+
+	return true
 end

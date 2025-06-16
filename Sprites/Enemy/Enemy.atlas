@@ -1,0 +1,4 @@
+images {
+  image: "/Sprites/Enemy/enemy-Sheet.png"
+}
+extrude_borders: 2

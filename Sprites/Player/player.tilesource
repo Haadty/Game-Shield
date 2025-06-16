@@ -1,0 +1,56 @@
+image: "/Sprites/Player/player-Sheet.png"
+tile_width: 64
+tile_height: 64
+collision_groups: "default"
+animations {
+  id: "absorb_left"
+  start_tile: 7
+  end_tile: 7
+}
+animations {
+  id: "absorb_right"
+  start_tile: 7
+  end_tile: 7
+  flip_horizontal: 1
+}
+animations {
+  id: "block_left"
+  start_tile: 4
+  end_tile: 4
+}
+animations {
+  id: "block_right"
+  start_tile: 4
+  end_tile: 4
+  flip_horizontal: 1
+}
+animations {
+  id: "dash_left"
+  start_tile: 6
+  end_tile: 6
+}
+animations {
+  id: "dash_right"
+  start_tile: 6
+  end_tile: 6
+  flip_horizontal: 1
+}
+animations {
+  id: "idle"
+  start_tile: 1
+  end_tile: 3
+  playback: PLAYBACK_LOOP_FORWARD
+  fps: 5
+}
+animations {
+  id: "parry_left"
+  start_tile: 5
+  end_tile: 5
+}
+animations {
+  id: "parry_right"
+  start_tile: 5
+  end_tile: 5
+  flip_horizontal: 1
+}
+extrude_borders: 2

@@ -1,4 +1,10 @@
 images {
-  image: "/Sprites/Scenes/Lines.png"
+  image: "/Sprites/Scenes/Layer 1.png"
+}
+images {
+  image: "/Sprites/Scenes/fundo.png"
+}
+images {
+  image: "/Sprites/Scenes/transition_dark.png"
 }
 extrude_borders: 2
